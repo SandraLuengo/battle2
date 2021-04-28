@@ -12,13 +12,21 @@ let init = () => {
   canvas.height = 600;
   canvas.canMove = false;
   canvas.mouseArray = [];
+  canvas.pos = { x: 0, y: 0 };
   canvas.addEventListener("mousedown", mouseDown);
   canvas.addEventListener("mousemove", mouseMove);
   canvas.addEventListener("mouseup", mouseUp);
 };
 
-let mouseDown = () => {
+let mouseDown = (e) => {
   canvas.canMove = true;
+  setPosition(e);
+};
+
+let setPosition = (e) => {
+  let { pos } = canvas;
+  pos.x = e.clientX;
+  pos.y = e.clientY;
 };
 
 let mouseMove = (e) => {
@@ -27,20 +35,22 @@ let mouseMove = (e) => {
   mouseArray.push([e.clientX, e.clientY]);
   if (mouseArray.length > 20) {
     draw(e);
-    //checkFigure();
+    checkFigure();
   }
 };
 
 let draw = (e) => {
-  let { ctx } = canvas;
+  let { ctx, pos } = canvas;
   ctx.beginPath();
-  ctx.lineWidth = 10;
+  ctx.lineWidth = 7;
   ctx.lineCap = "round";
-  ctx.strokeStyle = "#c0392b";
-  ctx.moveTo(e.clientX, e.clientY);
-  ctx.lineTo(e.clientX, e.clientY); 
-  ctx.stroke(); 
+  ctx.strokeStyle = "white";
+  ctx.moveTo(pos.x, pos.y);
+  setPosition(e);
+  ctx.lineTo(pos.x, pos.y);
+  ctx.stroke();
 };
+
 
 let checkFigure = () => {
   let { mouseArray } = canvas;
@@ -48,5 +58,7 @@ let checkFigure = () => {
 };
 
 let mouseUp = () => {
+  let { ctx } = canvas;
   canvas.canMove = false;
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
 };
