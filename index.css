@@ -2,8 +2,4 @@
     background-color: #1e1e52;
 }
 
-/* Probar a meter un gif */
-#game:active {
-    cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'  width='128' height='80' viewport='0 0 100 100' style='fill:white;font-size:300px;'><circle cx='20' cy='20' r='20'/></svg>") 16 0,auto;
-} 
 
