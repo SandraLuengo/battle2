@@ -15,21 +15,13 @@ let start = () => {
   canvas.mouseArray = [];
   canvas.pos = { x: 0, y: 0 };
   canvas.fps = 60;
-  canvas.count = 0;
   canvas.intervalId = null;
   canvas.addEventListener("mousedown", mouseDown);
-  canvas.addEventListener("mousemove", mouseMove);
+  canvas.addEventListener("mousemove", mouseMoveManejador);
   canvas.addEventListener("mouseup", mouseUp);
 };
 
-let init = () => {
-  canvas.idInterval = setInterval(() => {
-    canvas.count++;
-  }, 1000 / this.fps);
-};
-
 let mouseDown = (e) => {
-  init();
   canvas.canMove = true;
   setPosition(e);
 };
@@ -39,18 +31,28 @@ let setPosition = (e) => {
   pos.x = e.clientX;
   pos.y = e.clientY;
 };
+const throttler = (delay, fn) => {
+  let ultimaLlamada;
+  return function (...args) {
+    const ahora = (new Date).getTime();
+    if (ahora - ultimaLlamada < delay) {
+      return;
+    }
+    ultimaLlamada = ahora;
+    return fn(...args);
+  }
+}
 // mirar la pendiente de la recta para saber si es una diagonal(tiene que ser constante) (y2-y1)/(x2-x1)
 // guardar direccion del cursor
 let mouseMove = (e) => {
   let { canMove, mouseArray } = canvas;
   if (!canMove) return;
-  // Throttling  https://github.com/Fictizia/Curso-de-JavaScript-avanzado-para-desarrolladores_ed7/blob/main/teoria/clase8.md
-  if (canvas.count % 4 === 0) {
-    mouseArray.push({ x: e.clientX, y: e.clientY });
-  }
+  mouseArray.push({ x: e.clientX, y: e.clientY });
   draw(e);
   checkFigure();
 };
+
+const mouseMoveManejador = throttler(80, mouseMove);
 
 let draw = (e) => {
   let { ctx, pos } = canvas;
@@ -68,8 +70,8 @@ let draw = (e) => {
 
 let checkFigure = () => {
   let { mouseArray } = canvas;
-  if (!!mouseArray[mouseArray.length - 5] && !!mouseArray[mouseArray.length - 1]) {
-    let p0 = mouseArray[mouseArray.length - 5];
+  if (!!mouseArray[mouseArray.length - 3] && !!mouseArray[mouseArray.length - 1]) {
+    let p0 = mouseArray[mouseArray.length - 3];
     let p6 = mouseArray[mouseArray.length - 1];
     let diffX = p6.x - p0.x;
     let diffY = p6.y - p0.y;
@@ -114,6 +116,5 @@ let mouseUp = () => {
 
 let reset = () => {
   canvas.mouseArray.length = 0;
-  canvas.count = 0;
   canvas.pos = { x: 0, y: 0 };
 };
