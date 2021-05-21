@@ -1,3 +1,4 @@
+
 window.onload = () => {
   start();
 };
@@ -38,10 +39,12 @@ let setPosition = (e) => {
   pos.x = e.clientX;
   pos.y = e.clientY;
 };
-
+// mirar la pendiente de la recta para saber si es una diagonal(tiene que ser constante) (y2-y1)/(x2-x1)
+// guardar direccion del cursor
 let mouseMove = (e) => {
   let { canMove, mouseArray } = canvas;
   if (!canMove) return;
+  // Throttling  https://github.com/Fictizia/Curso-de-JavaScript-avanzado-para-desarrolladores_ed7/blob/main/teoria/clase8.md
   if (canvas.count % 4 === 0) {
     mouseArray.push({ x: e.clientX, y: e.clientY });
   }
@@ -72,16 +75,15 @@ let checkFigure = () => {
     let diffY = p6.y - p0.y;
     if (diffY < 10 && diffY > -5) {
       changeColor('blue')
-      return 'horizontal'
+      return 'horizontal';
     } else if (diffX < 10 && diffX > -5) {
-      changeColor('red') //vertical
-      return 'vertical'
+      changeColor('red'); //vertical
+      return 'vertical';
     } else {
-      changeColor('white') // v invertida
-      return 'other'
+      changeColor('white'); // cualquier otra cosa
+      return 'other';
     }
   }
-  console.log('NO IF')
 };
 
 let changeColor = (color) => {
